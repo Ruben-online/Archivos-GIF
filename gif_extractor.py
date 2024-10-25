@@ -4,11 +4,17 @@ class GIFExtractor:
         self.version = None
         self.image_size = None
         self.color_count = None
-        self.compression_type = None
+        # Tipo de compresión
+        self.compression_type = "LZW"
+        # Tipo de formato
+        self.numeric_formtat = "little-endian"
         self.background_color = None
-        self.image_count = None
-        self.created_on = None
+        self.image_count = 0
+        self.creation_date = None
+        self.modification_date = None
+        self.comments = None
 
+    # Método para obtener la información del GIF (recorrido de bits)
     def get_info(self):
         try:
             with open(self.file_path, 'rb') as file:
@@ -30,7 +36,7 @@ class GIFExtractor:
             print(f"Error al leer el arhivo {self.file_path}: {e}")
 
     def show_info(self):
-        print(f"Archivo: {self.file_path}")
+        print(f"\nArchivo: {self.file_path}")
         print(f"Versión: {self.version}")
         print(f"Tamaño de imagen: {self.image_size}")
         print(f"Cantidad de colores: {self.color_count}")
