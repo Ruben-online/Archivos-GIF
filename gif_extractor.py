@@ -22,43 +22,49 @@ class GIFExtractor:
     def get_info(self):
         try:
             with open(self.file_path, 'rb') as file:
+                print(f"Leyendo archivo: {self.file_path}")  # Mensaje de depuración
+
                 # Primeros 6 bytes, obtiene la versión del GIF
                 header = file.read(6)
                 self.version = header.decode('ascii')
+                print(f"Versión detectada: {self.version}")  # Verificar versión
 
                 # Obtiene el tamaño de la imagen
                 width = int.from_bytes(file.read(2), 'little')
                 height = int.from_bytes(file.read(2), 'little')
                 self.image_size = (width, height)
+                print(f"Tamaño de imagen: {self.image_size}")  # Confirmar tamaño
 
                 # Obtiene color de fondo y cantidad de colores
                 packed_byte = file.read(1)[0]
                 self.color_count = 2 ** ((packed_byte & 0b00000111) + 1)
                 self.background_color = file.read(1)[0]
+                print(f"Color de fondo: {self.background_color}, Cantidad de colores: {self.color_count}")
 
                 # Cuenta la cantidad de imágenes en el GIF
                 file.seek(10)
                 while True:
                     block = file.read(1)
-                    # Identificador de imagen
                     if block == b'\x2C':
                         self.image_count += 1
-                    # Fin del archivo GIF
                     elif block == b'\x3B':
                         break
                     else:
                         file.seek(-1, 1)
+                print(f"Cantidad de imágenes: {self.image_count}")
 
-                # Obtener las fechas de creación y modificación del archivo desde el sistema
+                # Obtener fechas de creación y modificación del archivo desde el sistema
                 self.creation_date = datetime.datetime.fromtimestamp(os.path.getctime(self.file_path))
                 self.modification_date = datetime.datetime.fromtimestamp(os.path.getmtime(self.file_path))
+                print(f"Fecha de creación: {self.creation_date}, Fecha de modificación: {self.modification_date}")
 
                 # Si la versión es GIF89a, extraer comentarios
                 if self.version == "GIF89a":
                     self.comments = self._extract_comments(file)
+                    print(f"Comentarios: {self.comments if self.comments else 'N/A'}")
 
         except Exception as e:
-            print(f"Error al leer el arhivo {self.file_path}: {e}")
+            print(f"Error al leer el archivo {self.file_path}: {e}")
 
     def _extract_comments(self, file):
         comments = []
