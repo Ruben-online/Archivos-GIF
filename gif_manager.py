@@ -13,15 +13,15 @@ class GIFManager:
                 if file.lower().endswith('.gif'):
                     gif_path = os.path.join(root, file)
                     self.gif_files.append(gif_path)
-                    #print(f"Archivo encontrado: {gif_path}")  # Confirmación de archivo
 
-    def process_gif_files(self):
-        if not self.gif_files:
-            print("No se encontraron archivos GIF para procesar.")
-            return
+    def process_gif_files(self, output_file="informacion_gifs.txt"):
+        # Borrar el archivo de salida antes de escribir nueva información
+        open(output_file, 'w').close()  # Esto limpia el archivo
 
         for gif_file in self.gif_files:
-            print(f"Procesando archivo GIF: {gif_file}")  # Confirmación de procesamiento
+            print(f"\n--- Procesando archivo GIF: {gif_file} ---")
             extractor = GIFExtractor(gif_file)
-            extractor.get_info()
-            extractor.show_info()
+            extractor.get_info()  # Extrae la información
+            extractor.show_info()  # Muestra en consola (opcional)
+            extractor.save_to_file(output_file)  # Guarda en el archivo de texto
+            print(f"--- Información guardada en {output_file} ---\n")
