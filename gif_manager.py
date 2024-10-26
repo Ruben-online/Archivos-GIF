@@ -13,7 +13,7 @@ class GIFManager:
                 if file.lower().endswith('.gif'):
                     gif_path = os.path.join(root, file)
                     self.gif_files.append(gif_path)
-                    print(f"Archivo encontrado: {gif_path}")  # Confirmación de archivo
+                    #print(f"Archivo encontrado: {gif_path}")  # Confirmación de archivo
 
     def process_gif_files(self):
         if not self.gif_files:
