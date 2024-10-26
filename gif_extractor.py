@@ -22,46 +22,47 @@ class GIFExtractor:
     def get_info(self):
         try:
             with open(self.file_path, 'rb') as file:
-                print(f"Leyendo archivo: {self.file_path}")  # Mensaje de depuración
+                print(f"--- Leyendo archivo: {self.file_path} ---")
 
-                # Primeros 6 bytes, obtiene la versión del GIF
+                # Leer los primeros 6 bytes para obtener la versión
                 header = file.read(6)
                 self.version = header.decode('ascii')
-                print(f"Versión detectada: {self.version}")  # Verificar versión
 
-                # Obtiene el tamaño de la imagen
+                # Tamaño de la imagen
                 width = int.from_bytes(file.read(2), 'little')
                 height = int.from_bytes(file.read(2), 'little')
                 self.image_size = (width, height)
-                print(f"Tamaño de imagen: {self.image_size}")  # Confirmar tamaño
 
-                # Obtiene color de fondo y cantidad de colores
+                # Color de fondo y cantidad de colores
                 packed_byte = file.read(1)[0]
                 self.color_count = 2 ** ((packed_byte & 0b00000111) + 1)
                 self.background_color = file.read(1)[0]
-                print(f"Color de fondo: {self.background_color}\nCantidad de colores: {self.color_count}")
 
-                # Cuenta la cantidad de imágenes en el GIF
-                file.seek(10)
+                # Contar imágenes (frames) en el archivo GIF
                 while True:
                     block = file.read(1)
-                    if block == b'\x2C':
+                    if not block:  # Verificar fin del archivo
+                        break
+                    elif block == b'\x2C':  # Identificador de imagen (frame)
                         self.image_count += 1
-                    elif block == b'\x3B':
+
+                        # Saltar al siguiente bloque de datos (tamaño desconocido)
+                        file.seek(9, 1)  # Saltar datos del frame por ejemplo
+
+                    elif block == b'\x3B':  # Fin del archivo GIF
                         break
                     else:
-                        file.seek(-1, 1)
-                print(f"Cantidad de imágenes: {self.image_count}")
+                        # Bloque irrelevante - leer el tamaño y saltarlo
+                        block_size = file.read(1)[0]
+                        file.seek(block_size, 1)
 
                 # Obtener fechas de creación y modificación del archivo desde el sistema
                 self.creation_date = datetime.datetime.fromtimestamp(os.path.getctime(self.file_path))
                 self.modification_date = datetime.datetime.fromtimestamp(os.path.getmtime(self.file_path))
-                print(f"Fecha de creación: {self.creation_date}, Fecha de modificación: {self.modification_date}")
 
-                # Si la versión es GIF89a, extraer comentarios
+                # Extraer comentarios si es GIF89a
                 if self.version == "GIF89a":
                     self.comments = self._extract_comments(file)
-                    print(f"Comentarios: {self.comments if self.comments else 'N/A'}")
 
         except Exception as e:
             print(f"Error al leer el archivo {self.file_path}: {e}")
@@ -71,10 +72,9 @@ class GIFExtractor:
         file.seek(10)
         while True:
             block_id = file.read(1)
-            if block_id == b'\x21':
+            if block_id == b'\x21':  # Extension introducer
                 extension_label = file.read(1)
-                # Comentario
-                if extension_label == b'\xFE':
+                if extension_label == b'\xFE':  # Comment Label
                     comment_data = b""
                     while True:
                         sub_block_size = file.read(1)[0]
@@ -83,15 +83,14 @@ class GIFExtractor:
                         comment_data += file.read(sub_block_size)
                     comments.append(comment_data.decode('ascii', errors='ignore'))
                 else:
+                    # Saltar a la siguiente sección si no es un bloque de comentario
                     file.seek(1, 1)
-            # Fin del GIF
-            elif block_id == b'\x3B':
+            elif block_id == b'\x3B':  # Fin del archivo GIF
                 break
-        return "\n".join(comments)
+        return "\n".join(comments) if comments else "Sin comentarios"
 
     def show_info(self):
-        print(f"\nArchivo: {self.file_path}")
-        print(f"Versión: {self.version}")
+        print(f"\nVersión: {self.version}")
         print(f"Tamaño de imagen: {self.image_size}")
         print(f"Cantidad de colores: {self.color_count}")
         print(f"Color de fondo: {self.background_color}")
