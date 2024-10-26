@@ -8,7 +8,7 @@ def main():
     gif_manager.search_gif_files()
 
     if gif_manager.gif_files:
-        print(f"Se encontraron {len(gif_manager.gif_files)} archivos GIF.")
+        print(f"\nSe encontraron {len(gif_manager.gif_files)} archivos GIF.")
         gif_manager.process_gif_files()
     else:
         print("No se encontraron archivos GIF.")
