@@ -14,7 +14,7 @@ class GIFManager:
                     gif_path = os.path.join(root, file)
                     self.gif_files.append(gif_path)
 
-    def process_gif_files(self, output_file="informacion_gifs.txt"):
+    def process_gif_files(self, output_file="GIF's.txt"):
         # Borrar el archivo de salida antes de escribir nueva información
         open(output_file, 'w').close()  # Esto limpia el archivo
 
