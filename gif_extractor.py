@@ -39,7 +39,7 @@ class GIFExtractor:
                 packed_byte = file.read(1)[0]
                 self.color_count = 2 ** ((packed_byte & 0b00000111) + 1)
                 self.background_color = file.read(1)[0]
-                print(f"Color de fondo: {self.background_color}, Cantidad de colores: {self.color_count}")
+                print(f"Color de fondo: {self.background_color}\nCantidad de colores: {self.color_count}")
 
                 # Cuenta la cantidad de imágenes en el GIF
                 file.seek(10)
