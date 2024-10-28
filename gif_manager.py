@@ -24,4 +24,3 @@ class GIFManager:
             extractor.get_info()  # Extrae la información
             extractor.show_info()  # Muestra en consola
             extractor.save_to_file(output_file)  # Guarda en el archivo de texto
-            print(f"--- Información guardada en {output_file} ---\n")
