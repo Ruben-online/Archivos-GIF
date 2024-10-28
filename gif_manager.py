@@ -21,7 +21,7 @@ class GIFManager:
             return
 
         for gif_file in self.gif_files:
-            print(f"Procesando archivo GIF: {gif_file}")  # Confirmación de procesamiento
+            print(f"\nProcesando archivo GIF: {gif_file}")  # Confirmación de procesamiento
             extractor = GIFExtractor(gif_file)
             extractor.get_info()
             extractor.show_info()
