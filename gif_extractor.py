@@ -100,3 +100,19 @@ class GIFExtractor:
         print(f"Fecha de creación: {self.creation_date}")
         print(f"Fecha de modificación: {self.modification_date}")
         print(f"Comentarios: {self.comments if self.comments else 'N/A'}")
+
+        # Guardar la información en un archivo .txt
+    def save_to_file(self, output_file):
+        with open(output_file, 'a') as file:
+            file.write(f"\n--- Información del archivo: {self.file_path} ---\n")
+            file.write(f"Versión: {self.version}\n")
+            file.write(f"Tamaño de imagen: {self.image_size}\n")
+            file.write(f"Cantidad de colores: {self.color_count}\n")
+            file.write(f"Color de fondo: {self.background_color}\n")
+            file.write(f"Tipo de compresión: {self.compression_type}\n")
+            file.write(f"Formato numérico: {self.numeric_format}\n")
+            file.write(f"Cantidad de imágenes: {self.image_count}\n")
+            file.write(f"Fecha de creación: {self.creation_date}\n")
+            file.write(f"Fecha de modificación: {self.modification_date}\n")
+            file.write(f"Comentarios: {self.comments if self.comments else 'N/A'}\n")
+            file.write("\n------------------------------------------\n")
