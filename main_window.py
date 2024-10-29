@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Configuración de la ventana principal
-        self.setWindowTitle("Editor de Información de GIFs")
+        self.setWindowTitle("Extractor de datos en archivos GIF")
         self.setGeometry(200, 200, 600, 400)
 
         # Configuración de layout principal
